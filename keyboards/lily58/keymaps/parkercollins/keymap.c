@@ -149,6 +149,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_case_modes(keycode, record)) {
         return false;
   }
+ // Regular user keycode case statement
+  switch (keycode) {
+      case CAPSWORD:
+          if (record->event.pressed) {
+              enable_caps_word();
+          }
+          return false;
+      case SNAKECASE:
+          if (record->event.pressed) {
+               enable_xcase_with(KC_UNDS);
+           }
+          return false;
+       default:
+           return true;
+    } 
   if (record->event.pressed) {
 #ifdef OLED_ENABLE
     set_keylog(keycode, record);
