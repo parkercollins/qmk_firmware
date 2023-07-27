@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "features/casemodes.h"
 
 enum layer_number {
   _QWERTY = 0,
@@ -139,6 +140,10 @@ bool oled_task_user(void) {
 #endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // Process case modes
+  if (!process_case_modes(keycode, record)) {
+        return false;
+  }
   if (record->event.pressed) {
 #ifdef OLED_ENABLE
     set_keylog(keycode, record);
