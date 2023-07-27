@@ -1,6 +1,11 @@
 #include QMK_KEYBOARD_H
 #include "features/casemodes.h"
 
+enum custom_keycodes {
+    CAPSWORD = SAFE_RANGE,
+    SNAKECASE,
+};
+
 enum layer_number {
   _QWERTY = 0,
   _LOWER,
