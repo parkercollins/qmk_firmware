@@ -25,7 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LCTRL| LALT | LGUI | /Space  /       \Enter \  |RGUI    |BackSP| RGUI |
+ *                   | LCTRL| LALT | LGUI | /Space  /       \Enter \  | CW_TOGG|BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |        |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
@@ -35,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   KC_LCTL,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-                        KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, KC_RGUI, KC_BSPC, KC_RGUI
+                        KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CW_TOGG, KC_BSPC, KC_RGUI
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -145,31 +145,41 @@ bool oled_task_user(void) {
 #endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // Regular user keycode case statement
-    switch (keycode) {
-        case QK_CAPS_WORD_TOGGLE:
-            if (record->event.pressed) {
-                tap_code16(QK_CAPS_WORD_TOGGLE);
-            }
-            return false;
-        case SNAKECASE:
-            if (record->event.pressed) {
-                enable_xcase_with(KC_UNDS);
-            }
-            return false;
-        case KEBABCASE:
-            if (record->event.pressed) {
-                enable_xcase_with(KC_MINS);
-            }
-            return false;
-        default:
-            return true;
-    } 
-  if (record->event.pressed) {
-#ifdef OLED_ENABLE
-    set_keylog(keycode, record);
-#endif
-    // set_timelog();
+  if (is_caps_word_on() || get_xcase_state() != XCASE_OFF) {
+    // Handle Caps Word and xcase (casemodes) related keycodes
+    if (!process_case_modes(keycode, record)) {
+      return false;
+    }
   }
-  return true;
+
+  // Regular user keycode case statement
+  switch (keycode) {
+    case CW_TOGG:
+      if (record->event.pressed) {
+        caps_word_on();
+      }
+      return false;
+    case SNAKECASE:
+      if (record->event.pressed) {
+        enable_xcase_with(KC_UNDS);
+      }
+      return false;
+    case KEBABCASE:
+      if (record->event.pressed) {
+        enable_xcase_with(KC_MINS);
+      }
+      return false;
+    // Add more custom keycodes handling if needed
+    // ...
+    default:
+      // Handle OLED keylog (if enabled) and other regular user keycodes processing
+#ifdef OLED_ENABLE
+      if (record->event.pressed) {
+        set_keylog(keycode, record);
+      }
+#endif
+      // set_timelog();
+      return true;
+  }
 }
+
