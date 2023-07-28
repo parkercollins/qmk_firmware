@@ -46,6 +46,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_SAT_STEP 17
 #define RGBLIGHT_VAL_STEP 17
 
+//CAPSWORD
+/*caps word used with shift or with caps lock. 
+default is caps lock; however, if caps lock is remapped at the OS level, 
+it is useful to use the shift key instead. 
+*/
+#define CAPSWORD_USE_SHIFT
+
 // Underglow
 /*
 #undef RGBLED_NUM
