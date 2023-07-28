@@ -18,14 +18,14 @@
 
 #include QMK_KEYBOARD_H
 
-// Check whether caps word is on
-bool caps_word_enabled(void);
-// Enable caps word
-void enable_caps_word(void);
-// Disable caps word
-void disable_caps_word(void);
-// Toggle caps word
-void toggle_caps_word(void);
+// // Check whether caps word is on
+// bool caps_word_enabled(void);
+// // Enable caps word
+// void enable_caps_word(void);
+// // Disable caps word
+// void disable_caps_word(void);
+// // Toggle caps word
+// void toggle_caps_word(void);
 
 // enum for the xcase states
 enum xcase_state {
