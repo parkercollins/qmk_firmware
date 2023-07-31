@@ -4,6 +4,7 @@
 enum custom_keycodes {
     SNAKECASE = SAFE_RANGE,
     KEBABCASE,
+    CAMELCASE,
 };
 
 enum layer_number {
@@ -23,7 +24,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |LCTRL |   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
- * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
+ * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|tap both shifts to enable capsword
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LCTRL| LALT | LGUI | /Space  /       \Enter \  | CW_TOGG|BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |        |      |      |
@@ -35,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   KC_LCTL,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-                        KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CW_TOGG, KC_BSPC, KC_RGUI
+                        KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CAMELCASE, KC_BSPC, KC_RGUI
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -169,7 +170,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         enable_xcase_with(KC_MINS);
       }
       return false;
-    // Add more custom keycodes handling if needed
+    case CAMELCASE:
+      if (record->event.pressed) {
+          // Call xcase function and enable the one-shot modifier for left shift
+          enable_xcase_with(OSM(MOD_RSFT));
+      }
+      return false;
+    // Add more custom keycodes handling if needed 
     // ...
     default:
       // Handle OLED keylog (if enabled) and other regular user keycodes processing
