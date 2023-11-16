@@ -26,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|tap both shifts to enable capsword
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LCTRL| LALT | LGUI | /Space  /       \Enter \  | CW_TOGG|BackSP| SNAKECASE |
+ *                   | LCTRL| LALT | LGUI | /Space  /       \Enter \  | camelCase|BackSP| SNAKECASE |
  *                   |      |      |      |/       /         \      \ |        |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
