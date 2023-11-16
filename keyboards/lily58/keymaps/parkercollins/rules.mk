@@ -9,7 +9,8 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.
 SWAP_HANDS_ENABLE = no      # Enable one-hand typing
 OLED_ENABLE= yes            # OLED display
-CAPS_WORD_ENABLE = yes      # Enable QMK core feature of capsword 
+CAPS_WORD_ENABLE = yes      # Enable QMK core feature of capsword
+TAP_DANCE_ENABLE = yes 		# Enable tap dance (one tap vs two does something different)
 # If you want to change the display of OLED, you need to change here
 SRC +=  ./lib/rgb_state_reader.c \
         ./lib/layer_state_reader.c \
