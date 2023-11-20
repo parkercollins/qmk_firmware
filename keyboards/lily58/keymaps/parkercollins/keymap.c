@@ -6,12 +6,11 @@ enum custom_keycodes {
     KEBABCASE,
     CAMELCASE,
     DELETE_LINE,
-
 };
 
 enum layer_number {
   _QWERTY = 0,
-  _NUM,
+  _SYM,
   _NAV,
   _ADJUST,
 };
@@ -44,13 +43,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_QWERTY] = LAYOUT(
-  TD(TD_ESC_GRAVE), KC_1,              KC_2,      KC_3,   KC_4,   KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KEBABCASE,
-  KC_TAB,           KC_Q,              KC_W,      KC_E,   KC_R,   KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-  KC_HYPR,          LT(_NAV, KC_A),    KC_S,      KC_D,   KC_F,   KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-  KC_LSFT,          KC_Z,              KC_X,      KC_C,   KC_V,   KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-                                            KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CAMELCASE, KC_BSPC, SNAKECASE
+  TD(TD_ESC_GRAVE), KC_1,              KC_2,      KC_3,   KC_4,             KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KEBABCASE,
+  KC_TAB,           KC_Q,              KC_W,      KC_E,   KC_R,             KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+  KC_HYPR,          LT(_NAV, KC_A),    KC_S,      KC_D,   LT(_SYM, KC_F),   KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  KC_LSFT,          KC_Z,              KC_X,      KC_C,   KC_V,             KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
+                                                        KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CAMELCASE, KC_BSPC, SNAKECASE
 ),
-/* NUM
+/* SYM
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -64,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
-[_NUM] = LAYOUT(
+[_SYM] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   _______, _______, _______, _______, _______, _______,                   XXXXXXX, KC_LCBR, KC_RCBR, KC_EXLM, XXXXXXX, XXXXXXX,
   _______, _______, _______, _______, _______, _______,                   XXXXXXX, KC_LPRN, KC_RPRN, KC_QUES, XXXXXXX, XXXXXXX,
@@ -117,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  return update_tri_layer_state(state, _NUM, _NAV, _ADJUST);
+  return update_tri_layer_state(state, _SYM, _NAV, _ADJUST);
 }
 
 //SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
@@ -192,8 +191,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
        if (record->event.pressed) {
           // Press Shift + Home (select line) and then Backspace (delete)
           register_code(KC_LSFT);
-          register_code(KC_HOME);
-          unregister_code(KC_HOME);
+          register_code(KC_LALT);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LALT);
           register_code(KC_BSPC);
           unregister_code(KC_BSPC);
           unregister_code(KC_LSFT);
