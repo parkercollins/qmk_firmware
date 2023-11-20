@@ -5,6 +5,8 @@ enum custom_keycodes {
     SNAKECASE = SAFE_RANGE,
     KEBABCASE,
     CAMELCASE,
+    DELETE_LINE,
+
 };
 
 enum layer_number {
@@ -186,6 +188,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           enable_xcase_with(OSM(MOD_RSFT));
       }
       return false;
+    case DELETE_LINE:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_HOME);
+          unregister_code(KC_HOME);
+          register_code(KC_BSPC);
+          unregister_code(KC_BSPC);
+          unregister_code(KC_LSFT);
+        }
+        return false;
     // Add more custom keycodes handling if needed
     // ...
     default:
@@ -199,4 +212,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
   }
 }
-
