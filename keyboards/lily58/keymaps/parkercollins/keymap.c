@@ -28,6 +28,7 @@ enum layer_number {
   _NUM,
   _REMOVE,
   _EDIT,
+  _MOVE,
   _ADJUST,
 };
 // Tap Dance declarations
@@ -59,10 +60,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_QWERTY] = LAYOUT(
-  TD(TD_ESC_GRAVE), KC_1,              KC_2,      KC_3,              KC_4,              KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-  KC_TAB,           KC_Q,              KC_W,      LT(_EDIT, KC_E),   LT(_REMOVE, KC_R), KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-  KC_HYPR,          LT(_NAV, KC_A),    KC_S,      KC_D,              LT(_SYM, KC_F),    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-  KC_LSFT,          KC_Z,              KC_X,      KC_C,              LT(_NUM, KC_V),    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+  TD(TD_ESC_GRAVE), KC_1,              KC_2,                 KC_3,              KC_4,              KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+  KC_TAB,           KC_Q,              LT(_MOVE, KC_W),      LT(_EDIT, KC_E),   LT(_REMOVE, KC_R), KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+  KC_HYPR,          LT(_NAV, KC_A),    KC_S,                 KC_D,              LT(_SYM, KC_F),    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  KC_LSFT,          KC_Z,              KC_X,                 KC_C,              LT(_NUM, KC_V),    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
                                                                    KC_LCTL, KC_LALT, KC_LGUI, KC_SPC, KC_ENT, CAMELCASE, SNAKECASE, KEBABCASE
 ),
 /* SYM
@@ -169,6 +170,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,       _______,       _______,       _______, _______,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        EDIT_CHAR_L,   EDIT_CHAR_R,   _______,       _______, _______,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   EDIT_LINE_L,    EDIT_WORD_L,   EDIT_WORD_R,   EDIT_LINE_R, _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,       _______,       _______,       _______, _______,
+                             _______, _______, _______, _______, _______,  _______,       _______,       _______
+  ),
+  /* _MOVE
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |-------.    ,-------|      |      |      |      | SAT+ | VAL+ |
+ * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ * |      |      |      |      |      |      |-------|    |-------|      |      | MODE | HUE- | SAT- | VAL- |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | LAlt | LGUI |      | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+  [_MOVE] = LAYOUT(
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,       _______,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        KC_LEFT,       KC_RGHT,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   MOVE_LINE_L,    MOVE_WORD_L,   MOVE_WORD_R,   MOVE_LINE_R, _______, _______,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,       _______,       _______,       _______, _______,
                              _______, _______, _______, _______, _______,  _______,       _______,       _______
   ),
@@ -384,6 +406,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_RGHT);
           unregister_code(KC_RGHT);
           unregister_code(KC_LSFT);
+        }
+        return false;
+
+        // MARK: Move begins here
+    case MOVE_LINE_L:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LGUI);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LGUI);
+        }
+        return false;
+    case MOVE_LINE_R:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LGUI);
+          register_code(KC_RGHT);
+          unregister_code(KC_RGHT);
+          unregister_code(KC_LGUI);
+        }
+        return false;
+    case MOVE_WORD_L:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LALT);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LALT);
+        }
+        return false;
+    case MOVE_WORD_R:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LALT);
+          register_code(KC_RGHT);
+          unregister_code(KC_RGHT);
+          unregister_code(KC_LALT);
         }
         return false;
 
