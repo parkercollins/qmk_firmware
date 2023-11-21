@@ -134,11 +134,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
   [_REMOVE] = LAYOUT(
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,      _______,       _______,       _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,      _______,       _______,       _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   DELETE_LINE_L, DELETE_WORD_L, DELETE_WORD_R, DELETE_LINE_R, _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,      _______,       _______,       _______, _______,
-                             _______, _______, _______, _______, _______,  _______,       _______,      _______
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,       _______,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        KC_BSPC,       KC_DEL,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   DELETE_LINE_L,  DELETE_WORD_L, DELETE_WORD_R, DELETE_LINE_R, _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,       _______,       _______,       _______, _______,
+                             _______, _______, _______, _______, _______,  _______,       _______,       _______
   ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
