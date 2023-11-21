@@ -5,7 +5,10 @@ enum custom_keycodes {
     SNAKECASE = SAFE_RANGE,
     KEBABCASE,
     CAMELCASE,
-    DELETE_WORD,
+    DELETE_WORD_L,
+    DELETE_WORD_R,
+    DELETE_LINE_L,
+    DELETE_LINE_R,
 };
 
 enum layer_number {
@@ -131,11 +134,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
   [_REMOVE] = LAYOUT(
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______, _______, _______, _______, _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______, _______, _______, _______, _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______, DELETE_WORD, _______, _______, _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______, _______,
-                             _______, _______, _______, _______, _______,  _______, _______, _______
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,      _______,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,      _______,       _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   DELETE_LINE_L, DELETE_WORD_L, DELETE_WORD_R, DELETE_LINE_R, _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,      _______,       _______,       _______, _______,
+                             _______, _______, _______, _______, _______,  _______,       _______,      _______
   ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -232,13 +235,52 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           enable_xcase_with(OSM(MOD_RSFT));
       }
       return false;
-    case DELETE_WORD:;
+    case DELETE_WORD_L:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_LGUI);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LGUI);
+          unregister_code(KC_LSFT);
+          register_code(KC_BSPC);
+          unregister_code(KC_BSPC);
+        }
+        return false;
+    case DELETE_WORD_R:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_LGUI);
+          register_code(KC_RGHT);
+          unregister_code(KC_RGHT);
+          unregister_code(KC_LGUI);
+          unregister_code(KC_LSFT);
+          register_code(KC_BSPC);
+          unregister_code(KC_BSPC);
+        }
+        return false;
+    case DELETE_LINE_L:;
        if (record->event.pressed) {
           // Press Shift + Home (select line) and then Backspace (delete)
           register_code(KC_LSFT);
           register_code(KC_LALT);
           register_code(KC_LEFT);
           unregister_code(KC_LEFT);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LSFT);
+          register_code(KC_BSPC);
+          unregister_code(KC_BSPC);
+        }
+        return false;
+    case DELETE_LINE_R:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_LALT);
+          register_code(KC_RGHT);
+          unregister_code(KC_RGHT);
           unregister_code(KC_LALT);
           unregister_code(KC_LSFT);
           register_code(KC_BSPC);
