@@ -13,6 +13,12 @@ enum custom_keycodes {
     EDIT_WORD_R,
     EDIT_LINE_L,
     EDIT_LINE_R,
+    EDIT_CHAR_L,
+    EDIT_CHAR_R,
+    MOVE_LINE_L,
+    MOVE_LINE_R,
+    MOVE_WORD_L,
+    MOVE_WORD_R,
 };
 
 enum layer_number {
@@ -161,8 +167,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [_EDIT] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        _______,       _______,       _______,       _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        KC_BSPC,       KC_DEL,       _______,       _______, _______,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   EDIT_LINE_L,  EDIT_WORD_L, EDIT_WORD_R, EDIT_LINE_R, _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   _______,        EDIT_CHAR_L,   EDIT_CHAR_R,   _______,       _______, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   EDIT_LINE_L,    EDIT_WORD_L,   EDIT_WORD_R,   EDIT_LINE_R, _______, _______,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,        _______,       _______,       _______,       _______, _______,
                              _______, _______, _______, _______, _______,  _______,       _______,       _______
   ),
@@ -359,6 +365,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_RGHT);
           unregister_code(KC_RGHT);
           unregister_code(KC_LALT);
+          unregister_code(KC_LSFT);
+        }
+        return false;
+    case EDIT_CHAR_L:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LSFT);
+        }
+        return false;
+    case EDIT_CHAR_R:;
+       if (record->event.pressed) {
+          // Press Shift + Home (select line) and then Backspace (delete)
+          register_code(KC_LSFT);
+          register_code(KC_RGHT);
+          unregister_code(KC_RGHT);
           unregister_code(KC_LSFT);
         }
         return false;
